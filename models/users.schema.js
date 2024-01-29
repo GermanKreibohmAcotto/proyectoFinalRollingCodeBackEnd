@@ -8,7 +8,7 @@ const UsersSchema = new mongoose.Schema({
     },
     contrasenia: { 
         type: String,
-        require: true,
+        require: false,
     },
 })
 

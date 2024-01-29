@@ -17,8 +17,8 @@ middlewars(){
     }
 
     listen(){
-        this.app.listen(3001, () => { 
-            console.log('servido ejecutandose', 3001)
+        this.app.listen(3002, () => { 
+            console.log('servido ejecutandose', 3002)
         })
     }
 }
