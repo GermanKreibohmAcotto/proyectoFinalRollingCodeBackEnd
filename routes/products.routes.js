@@ -6,10 +6,10 @@ const { createProduct, getProducts, getOneProduct , updateProduct, deleteProduct
 route.post('/', createProduct)
 /*obtener*/
 route.get('/', getProducts) 
-route.get('/one', getOneProduct) 
+route.get('/:id', getOneProduct) 
 /*Actualizar*/
-route.put('/', updateProduct)
+route.put('/:id', updateProduct)
 /*Borrar*/
-route.delete('/', deleteProduct)
+route.delete('/:id', deleteProduct)
 
 module.exports = route
