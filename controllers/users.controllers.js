@@ -1,5 +1,7 @@
 const UsersModel = require("../models/users.schema")
 const bcryptjs = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
 const createUser = async (req, res) => {
 	try {
 
@@ -17,7 +19,7 @@ const createUser = async (req, res) => {
 			return
 		}
 		const newUser = new UsersModel(req.body)
-		
+
 		const salt = bcryptjs.genSaltSync()
 		newUser.contrasenia = bcryptjs.hashSync(contrasenia, salt)
 
@@ -63,8 +65,8 @@ const deleteUser = async (req, res) => {
 	try {
 		const usersExist = await UsersModel.findOne({ _id: req.params.id })
 
-        if (!usersExist) {
-            return res.status(400).json({ msg: 'El usuario que intentas borrar no existe en la DB' })
+		if (!usersExist) {
+			return res.status(400).json({ msg: 'El usuario que intentas borrar no existe en la DB' })
 		}
 
 		await UsersModel.findByIdAndDelete({ _id: req.params.id })
@@ -75,10 +77,39 @@ const deleteUser = async (req, res) => {
 	}
 }
 
+const loginUser = async (req, res) => {
+	try {
+		const { emailUsuario, contrasenia } = req.body
+		const userExist = await UsersModel.findOne({ emailUsuario })
+		
+		if (!userExist) {
+			return res.status(400).json({ msg: 'Usuario y/o contraseña incorrecto' })
+		}
+
+		const passCheck = bcryptjs.compareSync(contrasenia, userExist.contrasenia)
+
+		if (!passCheck) {
+			return res.status(400).json({ msg: 'Usuario y/o contraseña incorrecto' })
+		}
+
+		const payload = {
+			id: userExist._id,
+			role: userExist.role
+		}
+
+		const token = jwt.sign(payload, process. env.SECRET_KEY)
+
+		res.status(200).json({ msg: 'Logueado', token })
+
+	} catch (error) {
+		res.status(500).json({ msg: 'Falla en el server', error })
+	}
+}
 module.exports = {
 	createUser,
 	getUsers,
 	getUser,
 	updateUser,
-	deleteUser
+	deleteUser,
+	loginUser
 }
