@@ -6,6 +6,11 @@ const UsersSchema = new mongoose.Schema({
         require: true,
         unique: true
     },
+    emailUsuario: {
+        type: String,
+        require: true,
+        unique: true
+    },
     contrasenia: {
         type: String,
         require: true,

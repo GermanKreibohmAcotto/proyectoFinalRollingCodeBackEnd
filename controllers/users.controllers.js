@@ -1,5 +1,5 @@
 const UsersModel = require("../models/users.schema")
-
+const bcryptjs = require('bcryptjs')
 const createUser = async (req, res) => {
 	try {
 
@@ -17,6 +17,10 @@ const createUser = async (req, res) => {
 			return
 		}
 		const newUser = new UsersModel(req.body)
+		
+		const salt = bcryptjs.genSaltSync()
+		newUser.contrasenia = bcryptjs.hashSync(contrasenia, salt)
+
 		await newUser.save()
 		res.status(201).json({ msg: 'Usuario creado con exito', newUser })
 
