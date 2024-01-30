@@ -1,12 +1,16 @@
 const UsersModel = require("../models/users.schema")
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { validationResult } = require('express-validator')
 
 const createUser = async (req, res) => {
 	try {
+		const errors = validationResult(req)
+		if (!errors.isEmpty()) {
+			return res.status(422).json({ msg: errors.array() })
+		}
 
 		const { nombreUsuario, contrasenia } = req.body
-
 		if (!nombreUsuario || !contrasenia) {
 			res.status(400).json({ msg: 'Algun campo esta vacio' })
 			return
@@ -44,6 +48,10 @@ const getUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
 	try {
+		const errors = validationResult(req)
+		if (!errors.isEmpty()) {
+			return res.status(422).json({ msg: errors.array() })
+		}
 		const getAOneUser = await UsersModel.findOne({ _id: req.params.id })
 		res.status(200).json({ msg: 'Usuario encontrado', getAOneUser })
 
@@ -81,7 +89,7 @@ const loginUser = async (req, res) => {
 	try {
 		const { emailUsuario, contrasenia } = req.body
 		const userExist = await UsersModel.findOne({ emailUsuario })
-		
+
 		if (!userExist) {
 			return res.status(400).json({ msg: 'Usuario y/o contraseña incorrecto' })
 		}
@@ -97,7 +105,7 @@ const loginUser = async (req, res) => {
 			role: userExist.role
 		}
 
-		const token = jwt.sign(payload, process. env.SECRET_KEY)
+		const token = jwt.sign(payload, process.env.SECRET_KEY)
 
 		res.status(200).json({ msg: 'Logueado', token })
 
