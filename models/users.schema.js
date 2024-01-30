@@ -6,10 +6,14 @@ const UsersSchema = new mongoose.Schema({
         require: true,
         unique: true
     },
-    contrasenia: { 
+    contrasenia: {
         type: String,
         require: false,
     },
+    role: {
+        type: String,
+        default: 'user'
+    }
 })
 
 const UsersModel = mongoose.model('users', UsersSchema)
