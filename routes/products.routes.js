@@ -1,6 +1,7 @@
 const express = require('express')
 const route = express.Router()
 const { createProduct, getProducts, getOneProduct , updateProduct, deleteProduct } = require('../controllers/product.controllers')
+const auth = require('../middlewars/auth')
 
 /*crear*/
 route.post('/', createProduct)

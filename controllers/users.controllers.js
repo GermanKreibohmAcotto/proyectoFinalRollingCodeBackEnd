@@ -54,7 +54,7 @@ const getUser = async (req, res) => {
 		}
 		const getAOneUser = await UsersModel.findOne({ _id: req.params.id })
 		res.status(200).json({ msg: 'Usuario encontrado', getAOneUser })
-
+ 
 	} catch (error) {
 		res.status(500).json({ msg: 'Falla en el server', error })
 	}
