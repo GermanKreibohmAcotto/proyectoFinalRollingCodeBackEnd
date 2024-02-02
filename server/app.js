@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 class Server {
     constructor() {
         this.app = express()
@@ -10,6 +11,7 @@ class Server {
 middlewars(){
     this.app.use(express.json())
     this.app.use(morgan('dev'))
+    this.app.use(cors())
 }
 
     routes() {

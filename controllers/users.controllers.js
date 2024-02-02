@@ -10,13 +10,13 @@ const createUser = async (req, res) => {
 			return res.status(422).json({ msg: errors.array() })
 		}
 
-		const { nombreUsuario, contrasenia } = req.body
-		if (!nombreUsuario || !contrasenia) {
+		const { correo, contrasenia } = req.body
+		if (!correo || !contrasenia) {
 			res.status(400).json({ msg: 'Algun campo esta vacio' })
 			return
 		}
 
-		const userExist = await UsersModel.findOne({ nombreUsuario })
+		const userExist = await UsersModel.findOne({ correo })
 
 		if (userExist) {
 			res.status(400).json({ msg: 'Usuario ya existe en la BD' })
@@ -87,17 +87,17 @@ const deleteUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
 	try {
-		const { emailUsuario, contrasenia } = req.body
-		const userExist = await UsersModel.findOne({ emailUsuario })
+		const { correo, contrasenia } = req.body
+		const userExist = await UsersModel.findOne({ correo })
 
 		if (!userExist) {
-			return res.status(400).json({ msg: 'Usuario y/o contraseña incorrecto' })
+			return res.status(400).json({ msg: 'Correo y/o contraseña incorrecto' })
 		}
 
 		const passCheck = bcryptjs.compareSync(contrasenia, userExist.contrasenia)
 
 		if (!passCheck) {
-			return res.status(400).json({ msg: 'Usuario y/o contraseña incorrecto' })
+			return res.status(400).json({ msg: 'Correo y/o contraseña incorrecto' })
 		}
 
 		const payload = {
@@ -107,7 +107,7 @@ const loginUser = async (req, res) => {
 
 		const token = jwt.sign(payload, process.env.SECRET_KEY)
 
-		res.status(200).json({ msg: 'Logueado', token })
+		res.status(200).json({ msg: 'Logueado', token, role: userExist.role })
 
 	} catch (error) {
 		res.status(500).json({ msg: 'Falla en el server', error })

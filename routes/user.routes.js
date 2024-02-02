@@ -5,12 +5,12 @@ const { createUser, getUsers, getUser, updateUser, deleteUser, loginUser } = req
 
 
 route.post('/',[
-    check('nombreUsuario', 'El campo nombreUsuario esta vacio').notEmpty(),
-    check('emailUsuario', 'El campo emailUsuario esta vacio').notEmpty(),
-    check('emailUsuario', 'Formato incorrecto').isEmail(),
-    check('emailUsuario', 'Min: 8 Max: 50').isLength({min:8, max:50}),
+    check('correo', 'El campo correo esta vacio').notEmpty(),
+    check('correo', 'El campo correo esta vacio').notEmpty(),
+    check('correo', 'Formato incorrecto').isEmail(),
+    check('correo', 'Min: 8 Max: 50').isLength({min:8, max:50}),
     check('contrasenia', 'El campo contrasenia esta vacio').notEmpty(),
-    check('contrasenia', 'Min: 10').isLength({min:10}),
+    check('contrasenia', 'Min: 8').isLength({min:8}),
 ], createUser)
 route.post('/login', loginUser)
 route.get('/', getUsers)

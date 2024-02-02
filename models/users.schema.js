@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 
 const UsersSchema = new mongoose.Schema({
-    nombreUsuario: {
+    correo: {
         type: String,
         require: true,
         unique: true
     },
-    emailUsuario: {
+    correo: {
         type: String,
         require: true,
         unique: true
