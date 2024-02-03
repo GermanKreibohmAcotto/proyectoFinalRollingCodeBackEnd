@@ -3,9 +3,9 @@ const cloudinary = require("../helpers/cloudinary")
 const createProduct = async (req, res) => {
     try {
 
-        const { titulo, precio, codigo } = req.body
+        const { titulo, precio, codigo, descripcion } = req.body
 
-        if (!titulo || !precio || !codigo) {
+        if (!titulo || !precio || !codigo || !descripcion) {
             res.status(400).json({ msg: 'Algun campo esta vacio' })
             return
         }
@@ -48,7 +48,6 @@ const getOneProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-
         const updateProduct = await ProductsModel.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
         res.status(200).json({ msg: 'Producto actualizado', updateProduct })
 

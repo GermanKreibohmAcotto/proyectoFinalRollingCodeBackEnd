@@ -5,7 +5,7 @@ const auth = require('../middlewars/auth')
 const multer = require ("../middlewars/multer")
 
 /*crear*/
-route.post('/', multer.single('image'), createProduct)
+route.post('/', multer.single('imagen'), createProduct)
 /*obtener*/
 route.get('/', getProducts) 
 route.get('/:id', getOneProduct) 
