@@ -2,6 +2,8 @@ const UsersModel = require("../models/users.schema")
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
+const CartModel = require("../models/cart.schema")
+const FavModel = require("../models/fav.schema")
 
 const createUser = async (req, res) => {
 	try {
@@ -27,7 +29,16 @@ const createUser = async (req, res) => {
 		const salt = bcryptjs.genSaltSync()
 		newUser.contrasenia = bcryptjs.hashSync(contrasenia, salt)
 
+		const newCart = new CartModel({idUser: newUser._id})
+		const newFav = new FavModel({idUser: newUser._id})
+
+		newUser.idCart = newCart._id
+		newUser.idFav = newFav._id
+		
 		await newUser.save()
+		await newCart.save()
+		await newFav.save()
+		
 		res.status(201).json({ msg: 'Usuario creado con exito', newUser })
 
 	} catch (error) {
