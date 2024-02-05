@@ -1,6 +1,6 @@
 const express = require('express')
 const route = express.Router()
-const { createProduct, getProducts, getOneProduct , updateProduct, deleteProduct } = require('../controllers/product.controllers')
+const { createProduct, getProducts, getOneProduct , updateProduct, deleteProduct, addProdCart, addProdFav } = require('../controllers/product.controllers')
 const auth = require('../middlewars/auth')
 const multer = require ("../middlewars/multer")
 const { check } = require('express-validator')
@@ -18,6 +18,11 @@ route.post('/', [
     check('imagen',  'Min: 5 Max: 80').isLength({min:5, max:80}),
     multer.single('imagen'),
 ], createProduct)
+
+
+route.post('/', multer.single('image'), createProduct)
+route.post('/cart/:idProd/:idCart/:idUser', addProdCart)
+route.post('/fav/:idProd/:idFav/:idUser', addProdFav)
 
 route.get('/', getProducts) 
 

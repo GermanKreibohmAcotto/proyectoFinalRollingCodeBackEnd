@@ -18,6 +18,12 @@ const UsersSchema = new mongoose.Schema({
     role: {
         type: String,
         default: 'user'
+    },
+    idCart:{
+        type: String
+    },
+    idFav:{
+        type: String
     }
 })
 
