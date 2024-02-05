@@ -49,7 +49,7 @@ const createUser = async (req, res) => {
 const getUsers = async (req, res) => {
 	try {
 		const getAllUsers = await UsersModel.find()
-		res.status(200).json({ msg: 'Usuarios encontrados', getAllUsers })
+		 res.status(200).json({ msg: 'Usuarios encontrados', getAllUsers })
 
 
 	} catch (error) {
