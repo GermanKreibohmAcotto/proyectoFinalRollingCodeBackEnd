@@ -118,7 +118,7 @@ const loginUser = async (req, res) => {
 
 		const token = jwt.sign(payload, process.env.SECRET_KEY)
 
-		res.status(200).json({ msg: 'Logueado', token, role: userExist.role })
+		res.status(200).json({ msg: 'Logueado', token, role: userExist.role})
 
 	} catch (error) {
 		res.status(500).json({ msg: 'Falla en el server', error })
