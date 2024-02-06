@@ -3,19 +3,32 @@ const cloudinary = require("../helpers/cloudinary")
 const UsersModel = require("../models/users.schema")
 const CartModel = require("../models/cart.schema")
 const FavModel = require("../models/fav.schema")
+
 const createProduct = async (req, res) => {
     try {
 
         const { titulo, precio, codigo, descripcion } = req.body
+   
 
         if (!titulo || !precio || !codigo || !descripcion) {
             res.status(400).json({ msg: 'Algun campo esta vacio' })
             return
         }
 
+        console.log(req.file)
         const results = await cloudinary.uploader.upload(req.file.path);
+       
 
-        const newProduct = new ProductsModel({ ...req.body, imagen: results.secure_url })
+        const newObject = {
+            titulo,
+            precio: Number(precio),
+            codigo,
+            descripcion,
+            imagen: results.secure_url,
+        }
+
+       
+        const newProduct = new ProductsModel(newObject)
         await newProduct.save()
         res.status(201).json({ msg: 'Producto creado con exito', newProduct })
 
@@ -46,8 +59,11 @@ const getOneProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
+        
         const updateProduct = await ProductsModel.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
-        res.status(200).json({ msg: 'Producto actualizado', updateProduct })
+        console.log(updateProduct)
+            res.status(200).json({ msg: 'Producto actualizado', updateProduct })
+    
 
     } catch (error) {
         res.status(500).json({ msg: 'Falla en el server', error })
@@ -102,25 +118,25 @@ const addProdCart = async (req, res) => {
 
 const addProdFav = async (req, res) => {
     try {
-        const favProd = await FavModel.findOne({_id: req.params.idFav})
-        const userFav = await UsersModel.findOne({_id: req.params.idUser})
-        if(!favProd){
-            return res.status(400).json({msg: 'ID favorito incorrecto'})
+        const favProd = await FavModel.findOne({ _id: req.params.idFav })
+        const userFav = await UsersModel.findOne({ _id: req.params.idUser })
+        if (!favProd) {
+            return res.status(400).json({ msg: 'ID favorito incorrecto' })
         }
-        if(favProd._id-toString() === userFav.idFav){
-            const prodFav = await ProductsModel.findOneAndDelete({_id: req.params.idProd})
+        if (favProd._id - toString() === userFav.idFav) {
+            const prodFav = await ProductsModel.findOneAndDelete({ _id: req.params.idProd })
             const favProdFilter = favProd.favorites.filter((fav) => fav._id.toString() === prodFav._id.toString())
 
-            if(favProdFilter.length > 0){
-                return res.status(400).json({msg: 'Producto ya existe en favoritos'})
+            if (favProdFilter.length > 0) {
+                return res.status(400).json({ msg: 'Producto ya existe en favoritos' })
             }
 
             favProd.favorites.push(prodFav)
             await favProd.save()
-            res.status(200).json({msg : "El producto se cargo a favoritos"})
-            
-        }else {
-            return res.status(400).json({msg: 'ID favoritos y/o usuario incorrecto'})
+            res.status(200).json({ msg: "El producto se cargo a favoritos" })
+
+        } else {
+            return res.status(400).json({ msg: 'ID favoritos y/o usuario incorrecto' })
         }
     } catch (error) {
         res.status(500).json({ msg: 'Falla en el server', error })
