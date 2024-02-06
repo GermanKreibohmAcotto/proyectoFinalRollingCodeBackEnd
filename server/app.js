@@ -18,6 +18,7 @@ middlewars(){
        this.app.use('/api/products', require('../routes/products.routes'))
        this.app.use('/api/users', require('../routes/user.routes'))
        this.app.use('/api/images', require('../routes/images.routes'))
+       this.app.use('/api', require('../routes'))
     }
 
     listen(){
