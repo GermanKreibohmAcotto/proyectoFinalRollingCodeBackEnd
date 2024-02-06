@@ -12,7 +12,13 @@ route.post('/',[
     check('contrasenia', 'Min: 8 Max: 30').isLength({min:8, max:30}),
 ], createUser)
 
-route.post('/login', loginUser)
+route.post('/login',[
+    check('correo', 'El campo correo esta vacio').notEmpty(),
+    check('correo', 'Formato incorrecto').isEmail(),
+    check('correo', 'Min: 8 Max: 50').isLength({min:8, max:50}),
+    check('contrasenia', 'El campo contraseñaa esta vacio').notEmpty(),
+    check('contrasenia', 'Min: 8 Max: 30').isLength({min:8, max:30}),
+], loginUser)
 
 route.get('/', getUsers)
 
