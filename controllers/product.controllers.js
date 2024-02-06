@@ -16,11 +16,6 @@ const createProduct = async (req, res) => {
         const results = await cloudinary.uploader.upload(req.file.path);
 
         const newProduct = new ProductsModel({ ...req.body, imagen: results.secure_url })
-
-
-
-
-
         await newProduct.save()
         res.status(201).json({ msg: 'Producto creado con exito', newProduct })
 
