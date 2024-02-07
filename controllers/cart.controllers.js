@@ -12,13 +12,13 @@ const getAllProductsCart = async(req, res) => {
 
 const deleteProductCart = async(req, res) => {
     try {
-        const objCart = await CartModel.findOne({_id: req.params.idCart})
+        const objCart = await CartModel.findOne({_id: req.idCarrito})
         const product = await ProductsModel.findOne({_id: req.params.idProd})
         const filterProd = objCart.products.filter((prod)=> prod._id.toString() !== product._id.toString())
         const prodExistFilter = objCart.products.filter((prod) => prod._id.toString() === product._id.toString())
 
         if(prodExistFilter.length > 0){
-            objCart.favorites = filterProd
+            objCart.products = filterProd
         await objCart.save()
         res.status(200).json({msg: 'Producto eliminado del carrito'})
         }else {

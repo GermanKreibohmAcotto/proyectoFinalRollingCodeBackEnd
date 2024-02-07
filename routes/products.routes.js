@@ -17,12 +17,12 @@ route.post('/', [
     check('descripcion',  'Min: 10 Max: 50').isLength({min:10, max:50}),
     check('imagen',  'Min: 5 Max: 80').isLength({min:5, max:80}),
     multer.single('imagen'),
-], createProduct)
+],auth('admin'), createProduct)
 
 
 route.post('/', multer.single('image'), createProduct)
-route.post('/cart/:idProd/:idCart/:idUser', addProdCart)
-route.post('/fav/:idProd/:idFav/:idUser', addProdFav)
+route.post('/cart/:idProd/', auth('user'), addProdCart)
+route.post('/fav/:idProd/', auth('user'), addProdFav)
 
 route.get('/', getProducts) 
 
@@ -42,10 +42,10 @@ route.put('/:id',[
     check('precio',  'Min: 2 Max: 50').isLength({min:2, max:50}),
     check('descripcion',  'Min: 10 Max: 50').isLength({min:10, max:50}),
     check('imagen',  'Min: 5 Max: 80').isLength({min:5, max:80}),
-], updateProduct)
+],auth('admin'), updateProduct)
 
 route.delete('/:id',[
     check('id', 'Formato incorrecto de ID').isMongoId(),
-], deleteProduct)
+],auth('admin'), deleteProduct)
 
 module.exports = route

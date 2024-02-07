@@ -77,16 +77,16 @@ const deleteProduct = async (req, res) => {
 
 const addProdCart = async (req, res) => {
     try {
-        const cartExist = await CartModel.findOne({ _id: req.params.idCart })
-        const userCart = await UsersModel.findOne({ _id: req.params.idUser })
+        const cartExist = await CartModel.findOne({ _id: req.idCarrito })
+        const userCart = await UsersModel.findOne({ _id: req.idUsuario })
 
         if (!cartExist) {
             return res.status(400).json({ msg: 'Carrito no existe' })
         }
 
-        if (cartExist._id.toString() === userCart.idCart) {
+        if (cartExist._id.toString() === userCart.idCart.toString()) {
             const prodFind = await ProductsModel.findOne({ _id: req.params.idProd })
-            const prodFilter = cartExist.products.filter((prod) => prod._id === prodFind._id.toString())
+            const prodFilter = cartExist.products.filter((prod) => prod._id.toString() === prodFind._id.toString())
 
             if (prodFilter.length > 0) {
                 return res.status(400).json({ msg: 'El producto ya existe en el carrito' })
@@ -107,13 +107,13 @@ const addProdCart = async (req, res) => {
 
 const addProdFav = async (req, res) => {
     try {
-        const favProd = await FavModel.findOne({_id: req.params.idFav})
-        const userFav = await UsersModel.findOne({_id: req.params.idUser})
+        const favProd = await FavModel.findOne({_id: req.idFavoritos})
+        const userFav = await UsersModel.findOne({_id: req.idUsuario})
         if(!favProd){
             return res.status(400).json({msg: 'ID favorito incorrecto'})
         }
-        if(favProd._id-toString() === userFav.idFav){
-            const prodFav = await ProductsModel.findOneAndDelete({_id: req.params.idProd})
+        if(favProd._id.toString() === userFav.idFav.toString()){
+            const prodFav = await ProductsModel.findOne({_id: req.params.idProd})
             const favProdFilter = favProd.favorites.filter((fav) => fav._id.toString() === prodFav._id.toString())
 
             if(favProdFilter.length > 0){
