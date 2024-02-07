@@ -6,6 +6,8 @@ const multer = require ("../middlewars/multer")
 const { check } = require('express-validator')
 
 route.post('/', [
+    multer.single('imagen'),
+    check('id', 'Formato incorrecto de ID').isMongoId(),
     check('titulo', 'El campo titulo esta vacio').notEmpty(),
     check('codigo', 'El campo codigo esta vacio').notEmpty(),
     check('precio', 'El campo precio esta vacio').notEmpty(),
@@ -15,14 +17,14 @@ route.post('/', [
     check('codigo',  'Min: 5 Max: 50').isLength({min:5, max:50}),
     check('precio',  'Min: 2 Max: 50').isLength({min:2, max:50}),
     check('descripcion',  'Min: 10 Max: 50').isLength({min:10, max:50}),
-    check('imagen',  'Min: 5 Max: 80').isLength({min:5, max:80}),
-    multer.single('imagen'),
+    check('imagen',  'Min: 5').isLength({min:5}),
 ],auth('admin'), createProduct)
 
 
 route.post('/', multer.single('image'), createProduct)
 route.post('/cart/:idProd/', auth('user'), addProdCart)
 route.post('/fav/:idProd/', auth('user'), addProdFav)
+
 
 route.get('/', getProducts) 
 
@@ -36,7 +38,6 @@ route.put('/:id',[
     check('codigo', 'El campo codigo esta vacio').notEmpty(),
     check('precio', 'El campo precio esta vacio').notEmpty(),
     check('descripcion', 'El campo descripcion esta vacio').notEmpty(),
-    check('imagen', 'El campo imagen esta vacio').notEmpty(),
     check('titulo',  'Min: 5 Max: 50').isLength({min:5, max:50}),
     check('codigo',  'Min: 5 Max: 50').isLength({min:5, max:50}),
     check('precio',  'Min: 2 Max: 50').isLength({min:2, max:50}),
