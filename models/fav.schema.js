@@ -1,12 +1,12 @@
-const { Schema, model} = require('mongoose')
+const { Schema, model } = require('mongoose')
 
-const FavSchema = new Schema({
+const FavSChema = new Schema({
     idUser:{
         type: String
     },
     favorites:[]
 })
 
-const FavModel = model('fav', FavSchema)
+const FavModel = model('fav', FavSChema)
 
 module.exports = FavModel

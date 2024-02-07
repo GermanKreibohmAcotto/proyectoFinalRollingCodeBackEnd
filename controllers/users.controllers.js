@@ -29,16 +29,16 @@ const createUser = async (req, res) => {
 		const salt = bcryptjs.genSaltSync()
 		newUser.contrasenia = bcryptjs.hashSync(contrasenia, salt)
 
-		const newCart = new CartModel({idUser: newUser._id})
-		const newFav = new FavModel({idUser: newUser._id})
+		const newCart = new CartModel({ idUser: newUser._id })
+		const newFav = new FavModel({ idUser: newUser._id })
 
 		newUser.idCart = newCart._id
 		newUser.idFav = newFav._id
-		
+
 		await newUser.save()
 		await newCart.save()
 		await newFav.save()
-		
+
 		res.status(201).json({ msg: 'Usuario creado con exito', newUser })
 
 	} catch (error) {
@@ -49,7 +49,7 @@ const createUser = async (req, res) => {
 const getUsers = async (req, res) => {
 	try {
 		const getAllUsers = await UsersModel.find()
-		 res.status(200).json({ msg: 'Usuarios encontrados', getAllUsers })
+		res.status(200).json({ msg: 'Usuarios encontrados', getAllUsers })
 
 
 	} catch (error) {
@@ -65,7 +65,7 @@ const getUser = async (req, res) => {
 		}
 		const getAOneUser = await UsersModel.findOne({ _id: req.params.id })
 		res.status(200).json({ msg: 'Usuario encontrado', getAOneUser })
- 
+
 	} catch (error) {
 		res.status(500).json({ msg: 'Falla en el server', error })
 	}
@@ -112,13 +112,15 @@ const loginUser = async (req, res) => {
 		}
 
 		const payload = {
-			id: userExist._id,
+			idUsuario: userExist._id,
+			idCarrito: userExist.idCart,
+			idFavoritos: userExist.idFav,
 			role: userExist.role
 		}
 
 		const token = jwt.sign(payload, process.env.SECRET_KEY)
 
-		res.status(200).json({ msg: 'Logueado', token, role: userExist.role})
+		res.status(200).json({ msg: 'Logueado', token, role: userExist.role, idUsuario: userExist._id})
 
 	} catch (error) {
 		res.status(500).json({ msg: 'Falla en el server', error })

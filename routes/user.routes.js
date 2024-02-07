@@ -2,6 +2,7 @@ const express = require('express')
 const { check } = require('express-validator')
 const route = express.Router()
 const { createUser, getUsers, getUser, updateUser, deleteUser, loginUser } = require('../controllers/users.controllers')
+const auth = require('../middlewars/auth')
 
 
 route.post('/',[
@@ -20,7 +21,7 @@ route.post('/login',[
     check('contrasenia', 'Min: 8 Max: 30').isLength({min:8, max:30}),
 ], loginUser)
 
-route.get('/', getUsers)
+route.get('/',auth('admin'), getUsers)
 
 route.get('/:id',[
     check('id', 'Formato incorrecto de ID').isMongoId(),
@@ -33,10 +34,10 @@ route.put('/:id',[
     check('correo', 'Min: 8 Max: 50').isLength({min:8, max:50}),
     check('contrasenia', 'El campo contraseña esta vacio').notEmpty(),
     check('contrasenia', 'Min: 8 Max: 30').isLength({min:8, max:30}),
-], updateUser)
+],auth('admin'), updateUser)
 
 route.delete('/:id',[
     check('id', 'Formato incorrecto de ID').isMongoId(),
-], deleteUser)
+],auth('admin'), deleteUser)
 
 module.exports = route

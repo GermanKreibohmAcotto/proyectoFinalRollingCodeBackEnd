@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const  {Schema, model } = require('mongoose')
 
-const UsersSchema = new mongoose.Schema({
+const UsersSchema = new Schema({
     correo: {
         type: String,
         require: true,
@@ -32,5 +32,5 @@ UsersSchema.methods.toJSON = function(){
     return usuario
 }
 
-const UsersModel = mongoose.model('users', UsersSchema)
+const UsersModel = model('users', UsersSchema)
 module.exports = UsersModel 
