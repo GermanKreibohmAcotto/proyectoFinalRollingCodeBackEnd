@@ -8,7 +8,7 @@ const createProduct = async (req, res) => {
     try {
 
         const { titulo, precio, codigo, descripcion } = req.body
-   
+
 
         if (!titulo || !precio || !codigo || !descripcion) {
             res.status(400).json({ msg: 'Algun campo esta vacio' })
@@ -17,7 +17,7 @@ const createProduct = async (req, res) => {
 
         console.log(req.file)
         const results = await cloudinary.uploader.upload(req.file.path);
-       
+
 
         const newObject = {
             titulo,
@@ -27,7 +27,7 @@ const createProduct = async (req, res) => {
             imagen: results.secure_url,
         }
 
-       
+
         const newProduct = new ProductsModel(newObject)
         await newProduct.save()
         res.status(201).json({ msg: 'Producto creado con exito', newProduct })
@@ -59,11 +59,11 @@ const getOneProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-        
+
         const updateProduct = await ProductsModel.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
         console.log(updateProduct)
-            res.status(200).json({ msg: 'Producto actualizado', updateProduct })
-    
+        res.status(200).json({ msg: 'Producto actualizado', updateProduct })
+
 
     } catch (error) {
         res.status(500).json({ msg: 'Falla en el server', error })
