@@ -20,8 +20,6 @@ route.post('/', [
     check('imagen',  'Min: 5').isLength({min:5}),
 ],auth('admin'), createProduct)
 
-
-route.post('/', multer.single('image'), createProduct)
 route.post('/cart/:idProd/', auth('user'), addProdCart)
 route.post('/fav/:idProd/', auth('user'), addProdFav)
 
