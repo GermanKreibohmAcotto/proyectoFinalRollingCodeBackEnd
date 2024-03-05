@@ -21,7 +21,7 @@ route.post('/login',[
     check('contrasenia', 'Min: 8 Max: 30').isLength({min:8, max:30}),
 ], loginUser)
 
-route.get('/',auth('admin'), getUsers)
+route.get('/', getUsers)
 
 route.get('/:id',[
     check('id', 'Formato incorrecto de ID').isMongoId(),
