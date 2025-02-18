@@ -1,32 +1,26 @@
 const ProductsModel = require("../models/products.schema")
-const cloudinary = require("../helpers/cloudinary")
 const UsersModel = require("../models/users.schema")
 const CartModel = require("../models/cart.schema")
 const FavModel = require("../models/fav.schema")
+const cloudinary = require("cloudinary").v2
 
 const createProduct = async (req, res) => {
     try {
-
-        const { titulo, precio, codigo, descripcion } = req.body
-
+        const { titulo, precio, codigo, descripcion, imagen, imagenPublicId } = req.body
 
         if (!titulo || !precio || !codigo || !descripcion) {
             res.status(400).json({ msg: 'Algun campo esta vacio' })
             return
         }
 
-        console.log(req.file)
-        const results = await cloudinary.uploader.upload(req.file.path);
-
-
         const newObject = {
             titulo,
             precio: Number(precio),
             codigo,
             descripcion,
-            imagen: results.secure_url,
+            imagen,
+            imagenPublicId: imagenPublicId
         }
-
 
         const newProduct = new ProductsModel(newObject)
         await newProduct.save()
@@ -34,6 +28,7 @@ const createProduct = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ msg: 'Falla en el server', error })
+        console.log(error)
     }
 }
 
@@ -59,9 +54,20 @@ const getOneProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
+        const productExist = await ProductsModel.findOne({ _id: req.params.id })
 
+        if (!productExist) {
+            return res.status(400).json({ msg: 'El producto que intentas actualizar no existe en la DB' })
+        }
+
+        
+        if (req.body.imagenPublicId !== productExist.imagenPublicId) {
+            await cloudinary.uploader.destroy(productExist.imagenPublicId)
+            
+        }
+        console.log(req.body.imagenPublicId)
+        console.log(productExist.imagenPublicId)
         const updateProduct = await ProductsModel.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
-        console.log(updateProduct)
         res.status(200).json({ msg: 'Producto actualizado', updateProduct })
 
 
@@ -78,7 +84,26 @@ const deleteProduct = async (req, res) => {
         if (!productExist) {
             return res.status(400).json({ msg: 'El producto que intentas borrar no existe en la DB' })
         }
+
+        // Eliminar la imagen de Cloudinary
+        if (productExist.imagenPublicId) {
+            try {
+                await cloudinary.uploader.destroy(productExist.imagenPublicId, (error, res) => {
+                    if (error) {
+                        console.error('Error al eliminar la imagen de Cloudinary:', error)
+                        return res.status(500).json({ msg: 'Error al eliminar la imagen de Cloudinary', error })
+                    }
+                })
+            } catch (error) {
+                console.error('Error al eliminar la imagen de Cloudinary:', error)
+                return res.status(500).json({ msg: 'Error al eliminar la imagen de Cloudinary', error })
+            }
+        }
+
         await ProductsModel.findByIdAndDelete({ _id: req.params.id })
+
+        
+
         res.status(200).json({ msg: 'Producto eliminado' })
 
     } catch (error) {

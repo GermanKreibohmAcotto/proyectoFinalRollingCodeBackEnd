@@ -2,11 +2,11 @@ const express = require('express')
 const route = express.Router()
 const { createProduct, getProducts, getOneProduct , updateProduct, deleteProduct, addProdCart, addProdFav } = require('../controllers/product.controllers')
 const auth = require('../middlewars/auth')
-const multer = require ("../middlewars/multer")
 const { check } = require('express-validator')
+const upload = require('../middlewars/multer')
 
 route.post('/', [
-    multer.single('imagen'),
+    upload.single('imagen'),
     check('id', 'Formato incorrecto de ID').isMongoId(),
     check('titulo', 'El campo titulo esta vacio').notEmpty(),
     check('codigo', 'El campo codigo esta vacio').notEmpty(),
@@ -20,11 +20,8 @@ route.post('/', [
     check('imagen',  'Min: 5').isLength({min:5}),
 ],auth('admin'), createProduct)
 
-
-route.post('/', multer.single('image'), createProduct)
 route.post('/cart/:idProd/', auth('user'), addProdCart)
 route.post('/fav/:idProd/', auth('user'), addProdFav)
-
 
 route.get('/', getProducts) 
 

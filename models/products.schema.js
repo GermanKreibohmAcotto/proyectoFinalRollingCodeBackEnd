@@ -19,6 +19,11 @@ const ProductSchema = new mongoose.Schema({
     },
     imagen:{
         type: String,
+        require: true,
+    },
+    imagenPublicId: {
+        type: String,
+        required: true,
     }
 })
 
