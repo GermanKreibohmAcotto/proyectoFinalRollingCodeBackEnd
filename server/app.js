@@ -11,7 +11,11 @@ class Server {
 middlewars(){
     this.app.use(express.json())
     this.app.use(morgan('dev'))
-    this.app.use(cors())
+    this.app.use(cors({
+        origin: 'https://proyecto-final-rolling-code-nu.vercel.app', // Origen de tu frontend
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+        allowedHeaders: ['Content-Type', 'Authorization'] // Encabezados permitidos
+    }))
 }
 
     routes() {
