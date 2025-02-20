@@ -14,7 +14,7 @@ middlewars(){
     this.app.use(cors({
         origin: true, // Origen de tu frontend
         methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-        allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+        allowedHeaders: ['Content-Type', 'Authorization', 'auth'], // Encabezados permitidos
         credentials: true
 
     }));
